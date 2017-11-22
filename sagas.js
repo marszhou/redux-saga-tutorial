@@ -14,11 +14,12 @@ import {
 // first
 export function* helloSaga() {
   console.log('Hello Sagas!');
+  // throw Error('force this error occured...');
 }
 
 // async effect
 export function* incrementAsync(payload) {
-  console.log(payload);
+  // console.log(payload, delay(1000));
   yield delay(1000);
   yield put({ type: 'INCREMENT' });
 }
@@ -190,7 +191,7 @@ function* watchQueueRequests() {
 
 // eventChannel
 
-function countdown(secs) {
+function countdownChannel(secs) {
   return eventChannel(emitter => {
     const iv = setInterval(() => {
       secs -= 1;
@@ -212,7 +213,8 @@ function countdown(secs) {
 export function* countdownSaga(value) {
   // console.log('countdown saga begin');
   // console.log('countdown payload:', payload);
-  const chan = yield call(countdown, value);
+  // const chan = countdownChannel(value);
+  const chan = yield call(countdownChannel, value);
   console.log(chan);
   try {
     while (true) {
@@ -240,6 +242,7 @@ function* watchCountdown() {
   yield cancel(task);
 }
 
+// channel use 3 workers to take jobs
 function* watchChanneledRequests() {
   // create a channel to queue incoming requests
   const chan = yield call(channel)
@@ -268,8 +271,8 @@ function* handleChanneledRequest(chan, index) {
 
 export default function* rootSaga() {
   yield all([
-    helloSaga(),
-    watchIncrementAsync(),
+    call(helloSaga),
+    call(watchIncrementAsync),
     accoutSaga(),
     loginSaga(),
     game(),

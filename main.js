@@ -9,8 +9,29 @@ import Counter from './Counter';
 import reducer from './reducers';
 
 import rootSaga from './sagas';
-
-const sagaMiddleware = createSagaMiddleware();
+const sagaMiddleware = createSagaMiddleware({
+  // for testing
+  // sagaMonitor: {
+  //   effectTriggered(options) {
+  //     console.log(options);
+  //   }
+  // },
+  // emitter: emit => action => {
+  //   console.log(action);
+  //   if (Array.isArray(action)) {
+  //     action.forEach(emit);
+  //     return;
+  //   }
+  //   emit(action);
+  // },
+  // logger() {
+  //   console.log(arguments);
+  // },
+  // onError() {
+  //   console.log('error!');
+  // }
+  //
+});
 const store = createStore(reducer, applyMiddleware(sagaMiddleware));
 sagaMiddleware.run(rootSaga);
 
@@ -53,32 +74,32 @@ function render() {
       <button onClick={() => store.dispatch({ type: 'GAME_BEGIN' })}>
         GAME BEGIN
       </button>
-      <hr/>
-      <button onClick={() => {
+      <hr />
+      <button
+        onClick={() => {
           store.dispatch({ type: 'QUEUE_REQUEST', taskCounter });
           taskCounter++;
-        }
-      }>
+        }}
+      >
         QUEUE REQUEST
       </button>
-      <hr/>
-      <button onClick={() =>
-        store.dispatch({ type: 'countdown', payload: {value: 10}})
-      }>
+      <hr />
+      <button
+        onClick={() =>
+          store.dispatch({ type: 'countdown', payload: { value: 10 } })}
+      >
         Launch countdow
       </button>
-      <button onClick={() =>
-        store.dispatch({ type: 'countdown_cancel'})
-      }>
+      <button onClick={() => store.dispatch({ type: 'countdown_cancel' })}>
         Cancel countdown
       </button>
-      <hr/>
-      <button onClick={() =>
-        store.dispatch({ type: 'REQUEST_CHANNELED', payload: 'job'})
-      }>
+      <hr />
+      <button
+        onClick={() =>
+          store.dispatch({ type: 'REQUEST_CHANNELED', payload: 'job' })}
+      >
         Call Channel Worker to work
       </button>
-
     </div>,
     document.getElementById('root')
   );
